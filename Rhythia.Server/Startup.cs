@@ -6,6 +6,9 @@ public class Startup
     {
         services.AddSignalR()
             .AddMessagePackProtocol();
+        
+        // Hub singletons
+        // services.AddSingleton<>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
@@ -18,7 +21,8 @@ public class Startup
         app.UseWebSockets();
         app.UseEndpoints(endpoints =>
         {
-            
+            // endpoints.MapHub<SpectatorHub>("/spectator");
+            // endpoints.MapHub<MultiplayerHub>("/multiplayer");
         });
     }
 }
