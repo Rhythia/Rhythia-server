@@ -172,6 +172,12 @@ public class EntityStore<T> : IEntityStore
         {
             this.entity = entity;
         }
+
+        public void Destroy()
+        {
+            Item = null;
+            entity.Destroy();
+        }
         
         private readonly bool disposed = false;
         ~Usage()
