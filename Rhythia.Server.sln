@@ -1,8 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhythia.Server", "Rhythia.Server\Rhythia.Server.csproj", "{DC0A6E17-5970-4BF2-879D-1B4BAE43782B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DC0A6E17-5970-4BF2-879D-1B4BAE43782B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC0A6E17-5970-4BF2-879D-1B4BAE43782B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC0A6E17-5970-4BF2-879D-1B4BAE43782B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC0A6E17-5970-4BF2-879D-1B4BAE43782B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
