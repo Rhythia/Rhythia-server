@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Rhythia.Server.Authentication;
+using Rhythia.Server.Entities;
+using Rhythia.Server.Hubs.Spectator;
 
 namespace Rhythia.Server;
 
@@ -20,7 +22,7 @@ public class Startup
             .AddMessagePackProtocol();
         
         // Hub singletons
-        // services.AddSingleton<>();
+        services.AddSingleton<EntityStore<SpectatorClientState>>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
@@ -33,7 +35,7 @@ public class Startup
         app.UseWebSockets();
         app.UseEndpoints(endpoints =>
         {
-            // endpoints.MapHub<SpectatorHub>("/spectator");
+            endpoints.MapHub<SpectatorHub>("/spectator");
             // endpoints.MapHub<MultiplayerHub>("/multiplayer");
         });
     }
