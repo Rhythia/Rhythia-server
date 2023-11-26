@@ -32,6 +32,8 @@ public class Startup
 
         app.UseRouting();
 
+        app.UseAuthentication();
+
         app.UseWebSockets();
         app.UseEndpoints(endpoints =>
         {
