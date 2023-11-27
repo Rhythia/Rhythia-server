@@ -19,6 +19,9 @@ public class SpectatorHub : StatefulUserHub<ISpectatorClient, SpectatorClientSta
         
         clientState.StreamInfo = streamInfo;
         if (streamInfo.MapId == null) throw new ArgumentNullException(nameof(streamInfo.MapId));
+        if (streamInfo.Mods == null) throw new ArgumentNullException(nameof(streamInfo.Mods));
+        if (streamInfo.Settings == null) throw new ArgumentNullException(nameof(streamInfo.Settings));
+        // Allow "Score" to be null since it's not a requirement for replays
         
         await Clients.Group(CurrentContextGroupId).StreamStarted(CurrentContextUserId, streamInfo);
     }
@@ -38,6 +41,7 @@ public class SpectatorHub : StatefulUserHub<ISpectatorClient, SpectatorClientSta
         if (info == null)
             return; // TODO: Err... handle this properly later
 
+        info.Score = streamData.Score;
         info.SyncData = streamData.SyncData;
         
         await Clients.Group(CurrentContextGroupId).StreamDataReceived(CurrentContextUserId, streamData);
