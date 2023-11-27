@@ -11,4 +11,9 @@
       <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="7.0.14" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Online\Multiplayer\" />
+      <Folder Include="Replays\" />
+    </ItemGroup>
+
 </Project>

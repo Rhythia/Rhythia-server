@@ -10,9 +10,9 @@ public class SpectatorHub : StatefulUserHub<ISpectatorClient, SpectatorClientSta
     public static string GetGroupId(int userId) => $"watch/{userId}";
     public string CurrentContextGroupId => GetGroupId(CurrentContextUserId);
 
-    public async Task StartStreaming()
+    public async Task StartStreaming(StreamInfo streamInfo)
     {
-        await Clients.Group(CurrentContextGroupId).StreamStarted(CurrentContextUserId);
+        await Clients.Group(CurrentContextGroupId).StreamStarted(CurrentContextUserId, streamInfo);
     }
 
     public async Task StopStreaming()
@@ -20,9 +20,9 @@ public class SpectatorHub : StatefulUserHub<ISpectatorClient, SpectatorClientSta
         await Clients.Group(CurrentContextGroupId).StreamEnded(CurrentContextUserId);
     }
 
-    public async Task SendStreamData()
+    public async Task SendStreamData(StreamData streamData)
     {
-        await Clients.Group(CurrentContextGroupId).StreamDataReceived(CurrentContextUserId);
+        await Clients.Group(CurrentContextGroupId).StreamDataReceived(CurrentContextUserId, streamData);
     }
 
     public async Task StartWatching(int userId)
