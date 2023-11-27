@@ -1,4 +1,4 @@
-namespace Rhythia.Server.Hubs.Spectator;
+namespace Rhythia.Game.Online.Spectator;
 
 public interface ISpectatorServer
 {
