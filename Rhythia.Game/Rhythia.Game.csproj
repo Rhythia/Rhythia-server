@@ -13,7 +13,6 @@
 
     <ItemGroup>
       <Folder Include="Online\Multiplayer\" />
-      <Folder Include="Replays\" />
     </ItemGroup>
 
 </Project>
