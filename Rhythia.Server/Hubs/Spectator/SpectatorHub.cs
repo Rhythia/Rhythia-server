@@ -30,8 +30,8 @@ public class SpectatorHub : StatefulUserHub<ISpectatorClient, SpectatorClientSta
     {
         using var usage = await GetOrCreateLocalUserState();
         usage.Destroy();
-        
-        await Clients.Group(CurrentContextGroupId).StreamEnded(CurrentContextUserId);
+
+        await stopStreaming(CurrentContextUserId);
     }
 
     public async Task SendStreamData(StreamData streamData)
@@ -64,4 +64,15 @@ public class SpectatorHub : StatefulUserHub<ISpectatorClient, SpectatorClientSta
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, group);
     }
 
+    protected override async Task CleanUpState(SpectatorClientState state)
+    {
+        if (state.StreamInfo != null)
+            await stopStreaming(state.UserId);
+        await base.CleanUpState(state);
+    }
+
+    private async Task stopStreaming(int userId)
+    {
+        await Clients.Group(GetGroupId(userId)).StreamEnded(userId);
+    }
 }
