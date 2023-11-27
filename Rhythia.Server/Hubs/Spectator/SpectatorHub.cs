@@ -12,21 +12,45 @@ public class SpectatorHub : StatefulUserHub<ISpectatorClient, SpectatorClientSta
 
     public async Task StartStreaming(StreamInfo streamInfo)
     {
+        using var usage = await GetOrCreateLocalUserState();
+        var clientState = (usage.Item ??= new SpectatorClientState(Context.ConnectionId, CurrentContextUserId));
+        
+        if (clientState.StreamInfo != null) throw new Exception(); // Missing "InvalidStateException" TODO: Handle this properly
+        
+        clientState.StreamInfo = streamInfo;
+        if (streamInfo.MapId == null) throw new ArgumentNullException(nameof(streamInfo.MapId));
+        
         await Clients.Group(CurrentContextGroupId).StreamStarted(CurrentContextUserId, streamInfo);
     }
 
     public async Task StopStreaming()
     {
+        using var usage = await GetOrCreateLocalUserState();
+        usage.Destroy();
+        
         await Clients.Group(CurrentContextGroupId).StreamEnded(CurrentContextUserId);
     }
 
     public async Task SendStreamData(StreamData streamData)
     {
+        using var usage = await GetOrCreateLocalUserState();
+        var info = usage.Item?.StreamInfo;
+        if (info == null)
+            return; // TODO: Err... handle this properly later
+
+        info.SyncData = streamData.SyncData;
+        
         await Clients.Group(CurrentContextGroupId).StreamDataReceived(CurrentContextUserId, streamData);
     }
 
     public async Task StartWatching(int userId)
     {
+        StreamInfo? streamInfo;
+        using (var usage = await GetStateFromUser(userId))
+            streamInfo = usage.Item?.StreamInfo;
+        if (streamInfo != null)
+            await Clients.Caller.StreamStarted(userId, streamInfo);
+        
         string group = GetGroupId(userId);
         await Groups.AddToGroupAsync(Context.ConnectionId, group);
     }
