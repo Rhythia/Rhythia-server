@@ -1,7 +1,7 @@
 using MessagePack;
-using Rhythia.Game.Replays;
+using Rhythia.Core.Replays;
 
-namespace Rhythia.Game.Online.Spectator;
+namespace Rhythia.Core.Online.Spectator;
 
 [MessagePackObject]
 public class StreamData

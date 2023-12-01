@@ -1,6 +1,6 @@
 using MessagePack;
 
-namespace Rhythia.Game.Replays;
+namespace Rhythia.Core.Replays;
 
 [MessagePackObject]
 public class ReplayFrame

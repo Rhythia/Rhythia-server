@@ -1,4 +1,4 @@
-using Rhythia.Game.Online.Spectator;
+using Rhythia.Core.Online.Spectator;
 
 namespace Rhythia.Server.Hubs.Spectator;
 

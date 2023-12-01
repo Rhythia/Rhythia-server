@@ -1,6 +1,6 @@
 using MessagePack;
 
-namespace Rhythia.Game.Online.Spectator;
+namespace Rhythia.Core.Online.Spectator;
 
 [MessagePackObject]
 public class StreamSyncData
