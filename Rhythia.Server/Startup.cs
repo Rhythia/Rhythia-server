@@ -21,6 +21,8 @@ public class Startup
         services.AddSignalR()
             .AddMessagePackProtocol();
         
+        ConfigureAuthentication(services);
+        
         // Hub singletons
         services.AddSingleton<EntityStore<SpectatorClientState>>();
     }
