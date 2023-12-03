@@ -10,12 +10,7 @@ public class StatefulUserHub<TClient, TUserState> : Hub<TClient>
 {
     protected int CurrentContextUserId
     {
-        get
-        {
-            if (Context.UserIdentifier == null)
-                throw new InvalidOperationException("Current user has no identifier");
-            return int.Parse(Context.UserIdentifier);
-        }
+        get => Context.GetUserId();
     }
     
     protected readonly EntityStore<TUserState> UserStates;

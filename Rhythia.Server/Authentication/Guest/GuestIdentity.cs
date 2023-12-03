@@ -1,6 +1,6 @@
 using System.Security.Principal;
 
-namespace Rhythia.Server.Authentication;
+namespace Rhythia.Server.Authentication.Guest;
 
 public class GuestIdentity : IIdentity
 {

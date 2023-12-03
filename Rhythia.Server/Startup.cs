@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
-using Rhythia.Server.Authentication;
+using Rhythia.Server.Authentication.Guest;
 using Rhythia.Server.Entities;
 using Rhythia.Server.Hubs.Spectator;
 
