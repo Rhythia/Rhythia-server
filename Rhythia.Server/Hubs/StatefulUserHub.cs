@@ -8,7 +8,7 @@ public class StatefulUserHub<TClient, TUserState> : Hub<TClient>
     where TClient : class
     where TUserState : ClientState
 {
-    protected int CurrentContextUserId
+    protected string CurrentContextUserId
     {
         get => Context.GetUserId();
     }
@@ -20,7 +20,7 @@ public class StatefulUserHub<TClient, TUserState> : Hub<TClient>
         UserStates = userStates;
     }
 
-    protected KeyValuePair<long, TUserState>[] GetAllStates() => UserStates.GetAllEntities();
+    protected KeyValuePair<string, TUserState>[] GetAllStates() => UserStates.GetAllEntities();
 
     public override async Task OnConnectedAsync()
     {
@@ -90,5 +90,5 @@ public class StatefulUserHub<TClient, TUserState> : Hub<TClient>
         return usage;
     }
 
-    protected Task<EntityStore<TUserState>.Usage> GetStateFromUser(int userId) => UserStates.GetForUse(userId);
+    protected Task<EntityStore<TUserState>.Usage> GetStateFromUser(string userId) => UserStates.GetForUse(userId);
 }

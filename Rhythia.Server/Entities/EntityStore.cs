@@ -4,7 +4,7 @@ namespace Rhythia.Server.Entities;
 public class EntityStore<T> : IEntityStore
     where T : class
 {
-    private readonly Dictionary<long, Entity> entities = new();
+    private readonly Dictionary<string, Entity> entities = new();
     
     private const int lock_timeout = 5000;
 
@@ -21,12 +21,12 @@ public class EntityStore<T> : IEntityStore
 
     public string EntityName => typeof(T).Name;
 
-    public T? GetEntityUnsafe(long id)
+    public T? GetEntityUnsafe(string id)
     {
         lock (entities) return !entities.TryGetValue(id, out var entity) ? null : entity.GetItemUnsafe();
     }
 
-    public async Task<Usage> GetForUse(long id, bool createOnMissing = false)
+    public async Task<Usage> GetForUse(string id, bool createOnMissing = false)
     {
         int retries = 0;
         while (retries++ < 10)
@@ -57,7 +57,7 @@ public class EntityStore<T> : IEntityStore
         throw new TimeoutException("Could not allocate new entity");
     }
 
-    public async Task Destroy(long id)
+    public async Task Destroy(string id)
     {
         Entity? entity;
         lock (entities)
@@ -73,12 +73,12 @@ public class EntityStore<T> : IEntityStore
         catch (InvalidOperationException) { }
     }
 
-    public KeyValuePair<long, T?>[] GetAllEntities()
+    public KeyValuePair<string, T?>[] GetAllEntities()
     {
         lock (entities)
             return entities
                 .Where(pair => pair.Value.GetItemUnsafe() != null)
-                .Select(entity => new KeyValuePair<long, T?>(entity.Key, entity.Value.GetItemUnsafe()))
+                .Select(entity => new KeyValuePair<string, T?>(entity.Key, entity.Value.GetItemUnsafe()))
                 .ToArray();
     }
 
@@ -87,7 +87,7 @@ public class EntityStore<T> : IEntityStore
         lock (entities)
             entities.Clear();
     }
-    private void remove(long id)
+    private void remove(string id)
     {
         lock (entities)
             entities.Remove(id);
@@ -98,13 +98,13 @@ public class EntityStore<T> : IEntityStore
         private readonly SemaphoreSlim semaphore = new(1);
         
         private T? item;
-        private readonly long id;
+        private readonly string id;
         private readonly EntityStore<T> store;
         
         internal bool Destroyed { get; private set; }
         private bool isLocked => semaphore.CurrentCount == 0;
 
-        public Entity(long id, EntityStore<T> store)
+        public Entity(string id, EntityStore<T> store)
         {
             this.id = id;
             this.store = store;

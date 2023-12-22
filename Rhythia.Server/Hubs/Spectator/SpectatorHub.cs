@@ -5,9 +5,9 @@ namespace Rhythia.Server.Hubs.Spectator;
 
 public class SpectatorHub : StatefulUserHub<ISpectatorClient, SpectatorClientState>, ISpectatorServer
 {
-    protected SpectatorHub(EntityStore<SpectatorClientState> users) : base(users)
+    public SpectatorHub(EntityStore<SpectatorClientState> users) : base(users)
     {}
-    public static string GetGroupId(int userId) => $"watch/{userId}";
+    public static string GetGroupId(string userId) => $"watch/{userId}";
     public string CurrentContextGroupId => GetGroupId(CurrentContextUserId);
 
     public async Task StartStreaming(StreamInfo streamInfo)
@@ -47,7 +47,7 @@ public class SpectatorHub : StatefulUserHub<ISpectatorClient, SpectatorClientSta
         await Clients.Group(CurrentContextGroupId).StreamDataReceived(CurrentContextUserId, streamData);
     }
 
-    public async Task StartWatching(int userId)
+    public async Task StartWatching(string userId)
     {
         StreamInfo? streamInfo;
         using (var usage = await GetStateFromUser(userId))
@@ -58,7 +58,7 @@ public class SpectatorHub : StatefulUserHub<ISpectatorClient, SpectatorClientSta
         string group = GetGroupId(userId);
         await Groups.AddToGroupAsync(Context.ConnectionId, group);
     }
-    public async Task StopWatching(int userId)
+    public async Task StopWatching(string userId)
     {
         string group = GetGroupId(userId);
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, group);
@@ -71,7 +71,7 @@ public class SpectatorHub : StatefulUserHub<ISpectatorClient, SpectatorClientSta
         await base.CleanUpState(state);
     }
 
-    private async Task stopStreaming(int userId)
+    private async Task stopStreaming(string userId)
     {
         await Clients.Group(GetGroupId(userId)).StreamEnded(userId);
     }

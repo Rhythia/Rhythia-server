@@ -3,10 +3,10 @@ namespace Rhythia.Server.Hubs;
 public class ClientState
 {
     public readonly string ConnectionId;
-    public readonly int UserId;
+    public readonly string UserId;
     // public string Username => GetUsernameFromConnectionId();
 
-    public ClientState(in string connectionId, in int userId)
+    public ClientState(in string connectionId, in string userId)
     {
         ConnectionId = connectionId;
         UserId = userId;

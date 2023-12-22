@@ -4,11 +4,11 @@ namespace Rhythia.Server.Hubs;
 
 public static class HubCallerContextExtensions
 {
-    public static int GetUserId(this HubCallerContext context)
+    public static string GetUserId(this HubCallerContext context)
     {
         if (context.UserIdentifier == null)
             throw new InvalidOperationException("User has no identifier");
-        return int.Parse(context.UserIdentifier);
+        return context.UserIdentifier;
     }
 
     public static string GetToken(this HubCallerContext context)
