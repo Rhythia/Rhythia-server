@@ -25,7 +25,7 @@ public class DiscordAuthenticationHandler : AuthenticationHandler<Authentication
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         string? token = null;
-        if (Context.Request.Headers.TryGetValue("Token", out var tokenValue))
+        if (Context.Request.Headers.TryGetValue("Discord", out var tokenValue))
             token = tokenValue;
         if (token == null)
             return AuthenticateResult.Fail("No token");
@@ -40,8 +40,7 @@ public class DiscordAuthenticationHandler : AuthenticationHandler<Authentication
     }
     public async Task<DiscordUser> GetUserFromToken(string token)
     {
-        DiscordUser? user;
-        if (knownUsers.TryGetValue(token, out user))
+        if (knownUsers.TryGetValue(token, out DiscordUser? user))
             return user;
         var client = new HttpClient();
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -52,9 +51,7 @@ public class DiscordAuthenticationHandler : AuthenticationHandler<Authentication
         if (response == null)
             throw new InvalidDataException("Response is invalid");
         user = response.User;
-        if (user == null)
-            throw new InvalidDataException("Response is invalid");
-        knownUsers[token] = user;
+        knownUsers[token] = user ?? throw new InvalidDataException("Response is invalid");
         return user;
     }
 }
