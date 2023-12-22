@@ -24,7 +24,7 @@ public class GuestAuthenticationHandler : AuthenticationHandler<AuthenticationSc
     {
         int userId = 0;
         string? guestToken = null;
-        if (Context.Request.Headers.TryGetValue("Token", out var guestTokenValue)) guestToken = guestTokenValue;
+        if (Context.Request.Headers.TryGetValue("Guest", out var guestTokenValue)) guestToken = guestTokenValue;
         if (guestToken == null)
             return Task.FromResult(AuthenticateResult.Fail("Can't connect as guest with no id"));
         if (!rememberedUserIds.TryGetValue(guestToken, out userId))

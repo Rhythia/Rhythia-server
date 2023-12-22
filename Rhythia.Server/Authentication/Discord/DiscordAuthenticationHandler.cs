@@ -29,14 +29,21 @@ public class DiscordAuthenticationHandler : AuthenticationHandler<Authentication
             token = tokenValue;
         if (token == null)
             return AuthenticateResult.Fail("No token");
-        var user = await GetUserFromToken(token);
-        var nameClaim = new Claim(ClaimTypes.NameIdentifier, user.Id);
-        var tokenClaim = new Claim("discord", token);
-        var authenticationTicket = new AuthenticationTicket(
-            new ClaimsPrincipal(new[] { new ClaimsIdentity(new[] { nameClaim, tokenClaim }, AUTH_SCHEME) }),
-            new AuthenticationProperties(),
-            AUTH_SCHEME);
-        return AuthenticateResult.Success(authenticationTicket);
+        try
+        {
+            var user = await GetUserFromToken(token);
+            var nameClaim = new Claim(ClaimTypes.NameIdentifier, user.Id);
+            var tokenClaim = new Claim("discord", token);
+            var authenticationTicket = new AuthenticationTicket(
+                new ClaimsPrincipal(new[] { new ClaimsIdentity(new[] { nameClaim, tokenClaim }, AUTH_SCHEME) }),
+                new AuthenticationProperties(),
+                AUTH_SCHEME);
+            return AuthenticateResult.Success(authenticationTicket);
+        }
+        catch (Exception exception)
+        {
+            return AuthenticateResult.Fail(exception.Message);
+        }
     }
     public async Task<DiscordUser> GetUserFromToken(string token)
     {
