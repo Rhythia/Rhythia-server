@@ -13,7 +13,7 @@ public class DiscordAuthenticationHandler : AuthenticationHandler<Authentication
     public const string AUTH_SCHEME = "Discord";
     private Dictionary<string, DiscordUser> knownUsers = new();
 
-    protected DiscordAuthenticationHandler(
+    public DiscordAuthenticationHandler(
         IOptionsMonitor<AuthenticationSchemeOptions> options,
         ILoggerFactory logger,
         UrlEncoder encoder,

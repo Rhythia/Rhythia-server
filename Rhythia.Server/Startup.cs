@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
-using Rhythia.Server.Authentication.Guest;
+using Rhythia.Server.Authentication.Discord;
 using Rhythia.Server.Entities;
 using Rhythia.Server.Hubs.Spectator;
 
@@ -11,10 +11,10 @@ public class Startup
     {
         services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = GuestAuthenticationHandler.AUTH_SCHEME;
-                options.DefaultChallengeScheme = GuestAuthenticationHandler.AUTH_SCHEME;
+                options.DefaultAuthenticateScheme = DiscordAuthenticationHandler.AUTH_SCHEME;
+                options.DefaultChallengeScheme = DiscordAuthenticationHandler.AUTH_SCHEME;
             })
-            .AddScheme<AuthenticationSchemeOptions, GuestAuthenticationHandler>(GuestAuthenticationHandler.AUTH_SCHEME, options => {});
+            .AddScheme<AuthenticationSchemeOptions, DiscordAuthenticationHandler>(DiscordAuthenticationHandler.AUTH_SCHEME, options => {});
     }
     public void ConfigureServices(IServiceCollection services)
     {
@@ -39,6 +39,20 @@ public class Startup
         app.UseWebSockets();
         app.UseEndpoints(endpoints =>
         {
+            endpoints.MapGet("/status", async (context) =>
+            {
+                var response = context.Response;
+                var identity = context.User.Identity;
+                if (identity is { IsAuthenticated: true })
+                {
+                    await response.WriteAsync("ok");
+                }
+                else
+                {
+                    response.StatusCode = 403;
+                    await response.WriteAsync("not authenticated");
+                }
+            });
             endpoints.MapHub<SpectatorHub>("/spectator");
             // endpoints.MapHub<MultiplayerHub>("/multiplayer");
         });

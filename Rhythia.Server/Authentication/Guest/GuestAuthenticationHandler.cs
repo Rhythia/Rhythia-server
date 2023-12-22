@@ -11,7 +11,7 @@ public class GuestAuthenticationHandler : AuthenticationHandler<AuthenticationSc
     private static int userIdCounter = 0;
     private static Dictionary<string, int> rememberedUserIds = new();
 
-    protected GuestAuthenticationHandler(
+    public GuestAuthenticationHandler(
         IOptionsMonitor<AuthenticationSchemeOptions> options,
         ILoggerFactory logger,
         UrlEncoder encoder,
