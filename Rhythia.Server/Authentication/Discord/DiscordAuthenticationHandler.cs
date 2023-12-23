@@ -33,9 +33,10 @@ public class DiscordAuthenticationHandler : AuthenticationHandler<Authentication
         {
             var user = await GetUserFromToken(token);
             var nameClaim = new Claim(ClaimTypes.NameIdentifier, user.Id);
+            var displayClaim = new Claim("display", user.DisplayName);
             var tokenClaim = new Claim("discord", token);
             var authenticationTicket = new AuthenticationTicket(
-                new ClaimsPrincipal(new[] { new ClaimsIdentity(new[] { nameClaim, tokenClaim }, AUTH_SCHEME) }),
+                new ClaimsPrincipal(new[] { new ClaimsIdentity(new[] { nameClaim, displayClaim, tokenClaim }, AUTH_SCHEME) }),
                 new AuthenticationProperties(),
                 AUTH_SCHEME);
             return AuthenticateResult.Success(authenticationTicket);

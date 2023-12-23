@@ -11,11 +11,14 @@ public static class HubCallerContextExtensions
         return context.UserIdentifier;
     }
 
+    public static string GetUserName(this HubCallerContext context)
+    {
+        var displayName = context.User?.FindFirst(claim => claim.Type == "display")?.Value;
+        return displayName ?? "Guest";
+    }
     public static string GetToken(this HubCallerContext context)
     {
-        var discordToken = context.User?.FindFirst(claim => claim.Type == "discord")?.Value;
-        if (discordToken == null)
-            return $"Guest{GetUserId(context)}";
-        return discordToken;
+        var token = context.User?.FindFirst(claim => claim.Type == "discord")?.Value;
+        return token ?? $"Guest{GetUserId(context)}";
     }
 }

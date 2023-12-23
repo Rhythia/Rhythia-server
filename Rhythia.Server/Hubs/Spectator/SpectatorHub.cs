@@ -18,6 +18,7 @@ public class SpectatorHub : StatefulUserHub<ISpectatorClient, SpectatorClientSta
         if (clientState.StreamInfo != null) throw new Exception(); // Missing "InvalidStateException" TODO: Handle this properly
         
         clientState.StreamInfo = streamInfo;
+        streamInfo.UserName = Context.GetUserName();
         if (streamInfo.MapId == null) throw new ArgumentNullException(nameof(streamInfo.MapId));
         if (streamInfo.Mods == null) throw new ArgumentNullException(nameof(streamInfo.Mods));
         if (streamInfo.Settings == null) throw new ArgumentNullException(nameof(streamInfo.Settings));
