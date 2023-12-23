@@ -23,6 +23,7 @@ public class SpectatorHub : StatefulUserHub<ISpectatorClient, SpectatorClientSta
         if (streamInfo.Settings == null) throw new ArgumentNullException(nameof(streamInfo.Settings));
         // Allow "Score" to be null since it's not a requirement for replays
         
+        Console.WriteLine($"{CurrentContextUserId} started streaming");
         await Clients.Group(CurrentContextGroupId).StreamStarted(CurrentContextUserId, streamInfo);
     }
 
@@ -31,6 +32,7 @@ public class SpectatorHub : StatefulUserHub<ISpectatorClient, SpectatorClientSta
         using var usage = await GetOrCreateLocalUserState();
         usage.Destroy();
 
+        Console.WriteLine($"{CurrentContextUserId} stopped streaming");
         await stopStreaming(CurrentContextUserId);
     }
 
@@ -49,12 +51,15 @@ public class SpectatorHub : StatefulUserHub<ISpectatorClient, SpectatorClientSta
 
     public async Task StartWatching(string userId)
     {
-        StreamInfo? streamInfo;
-        using (var usage = await GetStateFromUser(userId))
-            streamInfo = usage.Item?.StreamInfo;
-        if (streamInfo != null)
-            await Clients.Caller.StreamStarted(userId, streamInfo);
-        
+        try
+        {
+            StreamInfo? streamInfo;
+            using (var usage = await GetStateFromUser(userId))
+                streamInfo = usage.Item?.StreamInfo;
+            if (streamInfo != null)
+                await Clients.Caller.StreamStarted(userId, streamInfo);
+        } catch {}
+
         string group = GetGroupId(userId);
         await Groups.AddToGroupAsync(Context.ConnectionId, group);
     }

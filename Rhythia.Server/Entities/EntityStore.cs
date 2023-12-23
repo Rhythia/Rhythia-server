@@ -187,7 +187,7 @@ public class EntityStore<T> : IEntityStore
         public void Dispose()
         {
             if (disposed) throw new InvalidOperationException("Attempted to dispose object twice");
-            if (!entity.Destroyed && entity.Item == null)
+            if (!entity.Destroyed && entity.GetItemUnsafe() == null)
                 entity.Destroy();
             entity.ReleaseLock();
         }
