@@ -8,6 +8,7 @@ public class StatefulUserHub<TClient, TUserState> : Hub<TClient>
     where TClient : class
     where TUserState : ClientState
 {
+    public static int ConnectedUsers { get; private set; } = 0;
     protected string CurrentContextUserId
     {
         get => Context.GetUserId();
@@ -24,6 +25,7 @@ public class StatefulUserHub<TClient, TUserState> : Hub<TClient>
 
     public override async Task OnConnectedAsync()
     {
+        ConnectedUsers++;
         await base.OnConnectedAsync();
         try
         {
@@ -37,6 +39,7 @@ public class StatefulUserHub<TClient, TUserState> : Hub<TClient>
 
     public sealed override async Task OnDisconnectedAsync(Exception? exception)
     {
+        ConnectedUsers--;
         await base.OnDisconnectedAsync(exception);
         await cleanUpState(true);
     }
