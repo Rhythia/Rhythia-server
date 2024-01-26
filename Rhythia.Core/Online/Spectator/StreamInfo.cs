@@ -10,5 +10,5 @@ public class StreamInfo
     [Key(2)] public byte[]? Mods { get; set; } // Use byte arrays as a workaround for re-implementation of formats
     [Key(3)] public byte[]? Settings { get; set; }
     [Key(4)] public byte[]? Score { get; set; }
-    [Key(5)] public StreamSyncData SyncData { get; set; }
+    [Key(5)] public StreamSyncData? SyncData { get; set; }
 }

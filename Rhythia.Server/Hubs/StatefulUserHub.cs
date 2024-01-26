@@ -32,7 +32,6 @@ public class StatefulUserHub<TClient, TUserState> : Hub<TClient>
         catch
         {
             Context.Abort();
-            throw;
         }
     }
 
