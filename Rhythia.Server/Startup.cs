@@ -39,7 +39,7 @@ public class Startup
         app.UseWebSockets();
         app.UseEndpoints(endpoints =>
         {
-            endpoints.MapGet("/status", async (context) =>
+            endpoints.MapGet("/auth", async (context) =>
             {
                 var response = context.Response;
                 var identity = context.User.Identity;
@@ -52,6 +52,11 @@ public class Startup
                     response.StatusCode = 403;
                     await response.WriteAsync("not authenticated");
                 }
+            });
+            endpoints.MapGet("/status", async (context) =>
+            {
+                var response = context.Response;
+                await response.WriteAsync("ok");
             });
             endpoints.MapHub<SpectatorHub>("/spectator");
             // endpoints.MapHub<MultiplayerHub>("/multiplayer");
