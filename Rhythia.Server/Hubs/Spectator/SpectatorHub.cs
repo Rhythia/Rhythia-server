@@ -9,6 +9,18 @@ public class SpectatorHub : StatefulUserHub<ISpectatorClient, SpectatorClientSta
     {}
     public static string GetGroupId(string userId) => $"watch/{userId}";
     public string CurrentContextGroupId => GetGroupId(CurrentContextUserId);
+    
+    // Broadcast connections to all players for now since we lack any kind of presence
+    public override async Task UserConnected()
+    {
+        await base.UserConnected();
+        await Clients.Others.PlayerAdded(Context.GetUserId(), Context.GetUserName());
+    }
+    public override async Task UserDisconnected()
+    {
+        await base.UserDisconnected();
+        await Clients.Others.PlayerRemoved(Context.GetUserId());
+    }
 
     public async Task StartStreaming(StreamInfo streamInfo)
     {
@@ -25,7 +37,7 @@ public class SpectatorHub : StatefulUserHub<ISpectatorClient, SpectatorClientSta
         // Allow "Score" to be null since it's not a requirement for replays
         
         Console.WriteLine($"{CurrentContextUserId} started streaming");
-        await Clients.Group(CurrentContextGroupId).StreamStarted(CurrentContextUserId, streamInfo);
+        await Clients.Others.StreamStarted(CurrentContextUserId, streamInfo); // Broadcast to everyone
     }
 
     public async Task StopStreaming()
@@ -79,6 +91,7 @@ public class SpectatorHub : StatefulUserHub<ISpectatorClient, SpectatorClientSta
 
     private async Task stopStreaming(string userId)
     {
-        await Clients.Group(GetGroupId(userId)).StreamEnded(userId);
+        await Clients.Others.StreamEnded(userId);
+        // await Clients.Group(GetGroupId(userId)).StreamEnded(userId);
     }
 }
