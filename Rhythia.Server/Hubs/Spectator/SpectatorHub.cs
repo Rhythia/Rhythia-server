@@ -15,6 +15,11 @@ public class SpectatorHub : StatefulUserHub<ISpectatorClient, SpectatorClientSta
     {
         await base.UserConnected();
         await Clients.Others.PlayerAdded(Context.GetUserId(), Context.GetUserName());
+        foreach (var state in GetAllStates())
+        {
+            if (state.Key == CurrentContextUserId) continue;
+            Clients.Caller.PlayerAdded(state.Value.UserId, state.Value.StreamInfo?.UserName ?? "unknown");
+        }
     }
     public override async Task UserDisconnected()
     {
