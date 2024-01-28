@@ -13,7 +13,7 @@ public static class Program
         return Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(builder =>
         {
             builder.UseStartup<Startup>();
-            builder.UseUrls("http://*:5000");
+            builder.UseUrls("http://localhost:5000");
         });
     }
 }
