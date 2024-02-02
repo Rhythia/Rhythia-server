@@ -14,4 +14,9 @@
       <ProjectReference Include="..\Rhythia.Core\Rhythia.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Hubs\Metadata\" />
+      <Folder Include="Hubs\Multiplayer\" />
+    </ItemGroup>
+
 </Project>

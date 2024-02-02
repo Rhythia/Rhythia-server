@@ -12,6 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Online\Metadata\" />
       <Folder Include="Online\Multiplayer\" />
     </ItemGroup>
 

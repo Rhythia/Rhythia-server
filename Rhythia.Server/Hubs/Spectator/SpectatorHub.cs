@@ -9,25 +9,6 @@ public class SpectatorHub : StatefulUserHub<ISpectatorClient, SpectatorClientSta
     {}
     public static string GetGroupId(string userId) => $"watch/{userId}";
     public string CurrentContextGroupId => GetGroupId(CurrentContextUserId);
-    
-    // Broadcast connections to all players for now since we lack any kind of presence
-    public override async Task UserConnected()
-    {
-        await base.UserConnected();
-        await Clients.All.PlayerAdded(Context.GetUserId(), Context.GetUserName());
-        
-        foreach (var state in GetAllStates())
-        {
-            if (state.Value.ConnectionId == Context.ConnectionId) continue;
-            await Clients.Caller.PlayerAdded(state.Value.UserId, state.Value.StreamInfo?.UserName ?? "unknown");
-            await Clients.Caller.StreamStarted(state.Value.UserId, state.Value.StreamInfo);
-        }
-    }
-    public override async Task UserDisconnected()
-    {
-        await base.UserDisconnected();
-        await Clients.All.PlayerRemoved(Context.GetUserId());
-    }
 
     public async Task StartStreaming(StreamInfo streamInfo)
     {
@@ -44,8 +25,7 @@ public class SpectatorHub : StatefulUserHub<ISpectatorClient, SpectatorClientSta
         // Allow "Score" to be null since it's not a requirement for replays
         
         Console.WriteLine($"{CurrentContextUserId} started streaming");
-        // await Clients.Group(CurrentContextGroupId).StreamStarted(CurrentContextUserId, streamInfo);
-        await Clients.All.StreamStarted(CurrentContextUserId, streamInfo); // Broadcast to everyone
+        await Clients.Group(CurrentContextGroupId).StreamStarted(CurrentContextUserId, streamInfo);
     }
 
     public async Task StopStreaming()
@@ -99,7 +79,6 @@ public class SpectatorHub : StatefulUserHub<ISpectatorClient, SpectatorClientSta
 
     private async Task stopStreaming(string userId)
     {
-        await Clients.All.StreamEnded(userId);
-        // await Clients.Group(GetGroupId(userId)).StreamEnded(userId);
+        await Clients.Group(GetGroupId(userId)).StreamEnded(userId);
     }
 }
